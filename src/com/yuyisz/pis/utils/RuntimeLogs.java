@@ -3,8 +3,6 @@ package com.yuyisz.pis.utils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class RuntimeLogs {
 	// 判断运行日志表是否存在，不存在就创建
@@ -40,15 +38,12 @@ public class RuntimeLogs {
 		Connection conn = DBUtil.getConn();
 		validateLogTableExist(conn);
 		PreparedStatement ps = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String date = sdf.format(new Date());
 		try {
 			ps = conn
-					.prepareStatement("insert into t_runtimelogs values(nextval('t_runtimelogs_seq'),?,?,?,?)");
-			ps.setString(1, date);
-			ps.setString(2, level);
-			ps.setString(3, service);
-			ps.setString(4, message);
+					.prepareStatement("insert into t_runtimelogs values(nextval('t_runtimelogs_seq'),now(),?,?,?)");
+			ps.setString(1, level);
+			ps.setString(2, service);
+			ps.setString(3, message);
 			int row = ps.executeUpdate();
 			return row > 0;
 		} catch (SQLException e) {
